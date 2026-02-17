@@ -302,7 +302,7 @@ Resultado: Alta probabilidad de simular abandono
 
 ---
 
-## 🏗️ Arquitectura del Proyecto
+##  Arquitectura del Proyecto
 
 ### Flujo de Datos End-to-End
 
@@ -324,7 +324,7 @@ Goodreads Dataset (UCSD)
                             ↓
 
 ┌─────────────────────────────────────────────────────────────────────┐
-│              FASE 2: ANÁLISIS NLP DE REVIEWS (NUEVO ⭐)             │
+│              FASE 2: ANÁLISIS NLP DE REVIEWS                        │
 └─────────────────────────────────────────────────────────────────────┘
 
 Script: 01b_analizar_reviews.py
@@ -442,7 +442,7 @@ proyecto_recomendacion_libros/
 │   ├── 02_limpieza_datos.py            # PASO 3: Limpieza (2-3 min)
 │   ├── 03_eda_analisis.py              # PASO 4: EDA (3-5 min)
 │   ├── 04_transformaciones.py          # PASO 5: Transformaciones (3-5 min)
-│   ├── 06_visualizar_reviews.py        # ⭐ PASO 6: Viz reviews (1-2 min)
+│   ├── 06_visualizar_reviews.py        # PASO 6: Viz reviews (1-2 min)
 │
 ├── 📄 DOCUMENTACIÓN
 │   ├── README.md                       # README completo (este)
@@ -603,7 +603,7 @@ python -c "import pandas; import numpy; import sklearn; print('✓ Todo instalad
 
 ---
 
-## 🚀 Pipeline Completo Paso a Paso
+##  Pipeline Completo Paso a Paso
 
 
 ### Ejecución Manual (Paso a Paso)
@@ -1805,6 +1805,8 @@ abandono:               # 0/1
 ### Gráfico 1: Distribuciones
 
 **Archivo:** `graficos_eda/01_distribuciones.png`
+<img width="4465" height="3561" alt="image" src="https://github.com/user-attachments/assets/72d3a6c0-8087-477b-a0c4-bf05264758eb" />
+
 
 ```
 CONTENIDO:
@@ -1826,6 +1828,8 @@ INSIGHTS:
 ### Gráfico 2: Correlaciones
 
 **Archivo:** `graficos_eda/02_correlaciones.png`
+<img width="3301" height="3021" alt="image" src="https://github.com/user-attachments/assets/74c89794-a07f-4bd1-b2f5-cedecd620d97" />
+
 
 ```
 HEATMAP DE CORRELACIONES
@@ -1844,6 +1848,8 @@ Relaciones destacadas:
 ### Gráfico 3: Scatter Plots
 
 **Archivo:** `graficos_eda/03_scatter_plots.png`
+<img width="4166" height="3535" alt="image" src="https://github.com/user-attachments/assets/d2e55269-991c-476c-9d02-bba778f6f894" />
+
 
 ```
 4 SUBPLOTS:
@@ -1864,6 +1870,8 @@ Relaciones destacadas:
 ### Gráfico 4: Análisis Temporal
 
 **Archivo:** `graficos_eda/04_analisis_temporal.png`
+<img width="4465" height="2962" alt="image" src="https://github.com/user-attachments/assets/58493ce0-306e-4222-899e-d27a2f8bdae8" />
+
 
 ```
 4 SUBPLOTS:
@@ -1884,6 +1892,7 @@ Relaciones destacadas:
 ### Gráfico 5: Análisis de Abandono
 
 **Archivo:** `graficos_eda/05_analisis_abandono.png`
+<img width="4165" height="1478" alt="image" src="https://github.com/user-attachments/assets/273a7236-b5b7-4e1e-9b55-8dd13188363f" />
 
 ```
 3 SUBPLOTS:
@@ -1903,6 +1912,8 @@ Relaciones destacadas:
 ### Gráfico 6: Feature Importance
 
 **Archivo:** `graficos_eda/06_feature_importance.png`
+<img width="3568" height="2366" alt="image" src="https://github.com/user-attachments/assets/7100a64d-7a50-48f2-a20e-28d98a53859d" />
+
 
 ```
 GRÁFICO DE BARRAS HORIZONTAL
@@ -1925,6 +1936,8 @@ Colores por categoría:
 ### Gráfico 7: Reviews - Distribuciones
 
 **Archivo:** `graficos_eda/07_reviews_distribuciones.png`
+<img width="5365" height="3562" alt="image" src="https://github.com/user-attachments/assets/92522960-ec0b-4a3d-be97-491d4a0c736f" />
+
 
 ```
 6 SUBPLOTS (histogramas con estadísticas):
@@ -1951,6 +1964,8 @@ Colores por categoría:
 ### Gráfico 8: Reviews - Correlaciones
 
 **Archivo:** `graficos_eda/08_reviews_correlaciones.png`
+<img width="3933" height="3557" alt="image" src="https://github.com/user-attachments/assets/d3da052d-3ecc-4f3f-988d-036308065b93" />
+
 
 ```
 HEATMAP DE CORRELACIONES ENTRE FEATURES DE REVIEWS
@@ -1969,6 +1984,8 @@ las features de reviews capturan aspectos diferentes e independientes
 ### Gráfico 9: Reviews - Scatter Plots
 
 **Archivo:** `graficos_eda/09_reviews_scatter_plots.png`
+<img width="4165" height="3563" alt="image" src="https://github.com/user-attachments/assets/823cb08b-e614-42b7-9e5f-5376a7cc71d5" />
+
 
 ```
 4 SUBPLOTS:
@@ -1989,6 +2006,8 @@ las features de reviews capturan aspectos diferentes e independientes
 ### Gráfico 10: Reviews - Categorización
 
 **Archivo:** `graficos_eda/10_reviews_categorizacion.png`
+<img width="5365" height="1763" alt="image" src="https://github.com/user-attachments/assets/ff22f587-7ffe-41e4-ae58-3a73a3e542dd" />
+
 
 ```
 3 GRÁFICOS DE BARRAS:
@@ -2012,6 +2031,8 @@ las features de reviews capturan aspectos diferentes e independientes
 ### Gráfico 11: Reviews - Top Libros
 
 **Archivo:** `graficos_eda/11_reviews_top_libros.png`
+<img width="4765" height="3560" alt="image" src="https://github.com/user-attachments/assets/7d18f71c-5205-43a4-bcac-fc91ed339c81" />
+
 
 ```
 4 SUBPLOTS (gráficos de barras horizontales):
