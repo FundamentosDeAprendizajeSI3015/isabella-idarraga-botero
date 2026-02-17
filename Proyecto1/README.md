@@ -315,10 +315,10 @@ Goodreads Dataset (UCSD)
 ├── goodreads_interactions.csv (2.3 GB)
 │   └── 228M interacciones user-book
 │
-├── goodreads_books.json.gz (2.7 GB)
+├── goodreads_books.json (2.7 GB)
 │   └── Metadatos de 2.3M libros
 │
-└── goodreads_reviews_dedup.json.gz (5.5 GB)
+└── goodreads_reviews_dedup.json (5.5 GB)
     └── 15M reviews de usuarios
 
                             ↓
@@ -453,8 +453,8 @@ proyecto_recomendacion_libros/
 ├── 📁 DATOS DE GOODREADS (descargados manualmente)
 │   └── datos_goodreads/
 │       ├── goodreads_interactions.csv      # 2.3 GB - 228M interacciones
-│       ├── goodreads_books.json.gz         # 2.7 GB - 2.3M libros
-│       └── goodreads_reviews_dedup.json.gz # 5.5 GB - 15M reviews 
+│       ├── goodreads_books.json         # 2.7 GB - 2.3M libros
+│       └── goodreads_reviews_dedup.json # 5.5 GB - 15M reviews 
 │
 ├── 📁 DATOS GENERADOS (creados por el pipeline)
 │   ├── features_reviews.csv            #  229 MB - Features NLP
@@ -539,11 +539,11 @@ Contiene:
 └── is_reviewed: ¿Escribió review? (0/1)
 ```
 
-#### 2. goodreads_books.json.gz
+#### 2. goodreads_books.json (descomprimir luego de la descarga)
 ```
 Ubicación en web: Sección "Meta-Data of Books"
 Tamaño: ~2.7 GB
-Guardar en: datos_goodreads/goodreads_books.json.gz
+Guardar en: datos_goodreads/goodreads_books.json
 
 Contiene (por cada libro):
 ├── book_id
@@ -555,11 +555,11 @@ Contiene (por cada libro):
 └── popular_shelves (géneros)
 ```
 
-#### 3. goodreads_reviews_dedup.json.gz 
+#### 3. goodreads_reviews_dedup.json (descomprimir luego de la descarga)
 ```
 Ubicación en web: Sección "Book Reviews"
 Tamaño: ~5.5 GB
-Guardar en: datos_goodreads/goodreads_reviews_dedup.json.gz
+Guardar en: datos_goodreads/goodreads_reviews_dedup.json
 
 Contiene (por cada review):
 ├── user_id
@@ -605,12 +605,6 @@ python -c "import pandas; import numpy; import sklearn; print('✓ Todo instalad
 
 ## 🚀 Pipeline Completo Paso a Paso
 
-### Ejecución Automática (Recomendado)
-
-```bash
-python pipeline_completo_con_reviews.py
-# Seleccionar opción 1
-```
 
 ### Ejecución Manual (Paso a Paso)
 
