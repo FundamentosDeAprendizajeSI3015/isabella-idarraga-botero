@@ -40,7 +40,7 @@ Este proyecto implementa un **sistema de recomendación inteligente** no solo ba
  389,466 sesiones de lectura simuladas
  54 features finales (22 creadas mediante feature engineering)
  11 visualizaciones generadas
- Pipeline end-to-end reproducible
+ Pipeline paso a paso
 ```
 
 ### Que es lo especial
