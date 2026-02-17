@@ -1,0 +1,25 @@
+# Requirements para Proyecto de Recomendación con Predicción de Abandono
+# Fundamentos de Aprendizaje Automático
+# Autor: Isabella Idárraga
+
+# Core data science
+pandas>=1.5.0
+numpy>=1.23.0
+
+# Visualización
+matplotlib>=3.6.0
+seaborn>=0.12.0
+
+# Machine Learning
+scikit-learn>=1.2.0
+
+# Notebooks
+jupyter>=1.0.0
+ipython>=8.0.0
+
+# Opcional pero recomendado para modelado avanzado
+# xgboost>=1.7.0
+# lightgbm>=3.3.0
+
+# Opcional para procesamiento de archivos grandes
+# pyarrow>=10.0.0

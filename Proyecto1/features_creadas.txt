@@ -1,0 +1,25 @@
+FEATURES CREADAS
+======================================================================
+
+1. num_libros_leidos
+2. duracion_promedio
+3. duracion_mediana
+4. duracion_std
+5. paginas_promedio
+6. paginas_totales
+7. progreso_promedio
+8. tasa_abandono
+9. num_lectores
+10. duracion_promedio_libro
+11. paginas_promedio_libro
+12. progreso_promedio_libro
+13. tasa_abandono_libro
+14. hora
+15. dia_semana
+16. es_fin_semana
+17. mes
+18. periodo_dia
+19. velocidad_lectura
+20. ratio_progreso
+21. num_sesiones
+22. densidad_lectura

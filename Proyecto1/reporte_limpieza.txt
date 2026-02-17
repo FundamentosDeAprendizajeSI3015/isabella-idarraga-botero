@@ -1,0 +1,19 @@
+======================================================================
+REPORTE DE LIMPIEZA DE DATOS
+======================================================================
+
+Fecha: 2026-02-16 18:30:24
+
+RESUMEN GENERAL
+----------------------------------------------------------------------
+Filas originales: 389466
+Filas finales: 388907
+Filas eliminadas: 559
+Porcentaje retenido: 99.86%
+
+ACCIONES REALIZADAS
+----------------------------------------------------------------------
+duplicados_eliminados: 543
+outliers_detectados: 12030
+valores_imputados: 0
+inconsistencias_corregidas: 9578
