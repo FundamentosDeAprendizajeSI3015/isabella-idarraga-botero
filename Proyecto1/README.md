@@ -31,6 +31,8 @@
 
 Este proyecto implementa un **sistema de recomendación inteligente** no solo basado en afinidad. Integra **análisis de procesamiento de lenguaje natural (NLP)** de 2 millones de reviews de usuarios para predecir no solo QUÉ libros le gustarían a un usuario, sino también CUÁLES tiene mayor probabilidad de completar.
 
+En este README se encuentra el paso a paso de como replicar el pipeline, ademas de los mensajes de ejecución recibidos durante el proceso y las imagenes arrojadas durante el proceso de visualización con sus respectivas interpretaciones. Todo esto en caso de tener problemas para replicarlo en otros dispositivos debido al gran volumen de datos (aproximadamente 27GB en los datos iniciales).
+
 ### Que hay en esta carpeta de "Proyecto 1"
 
 ```
@@ -433,7 +435,7 @@ datos_transformados.csv
 ## 📁 Estructura Completa de Archivos
 
 ```
-proyecto_recomendacion_libros/
+Proyecto1/
 │
 ├── 📄 SCRIPTS PRINCIPALES (ejecutables en orden)
 │  
@@ -507,8 +509,8 @@ Software:
 
 ```bash
 # Crear carpeta principal
-mkdir proyecto_recomendacion_libros
-cd proyecto_recomendacion_libros
+mkdir Proyecto1
+cd Proyecto1
 
 # Crear subcarpetas
 mkdir datos_goodreads
@@ -517,7 +519,7 @@ mkdir graficos_eda
 
 ### Paso 2: Copiar Archivos del Proyecto
 
-Copiar todos los scripts (.py) y documentación (.md) a `proyecto_recomendacion_libros/`
+Copiar todos los scripts (.py) y documentación (.md) a `Proyecto1/`
 
 ### Paso 3: Descargar Datos de Goodreads
 
@@ -528,7 +530,7 @@ Copiar todos los scripts (.py) y documentación (.md) a `proyecto_recomendacion_
 #### 1. goodreads_interactions.csv
 ```
 Ubicación en web: Sección "Book Shelves"
-Tamaño: ~2.3 GB
+Tamaño: ~2.3 GB (descargado marca 4.02GB)
 Guardar en: datos_goodreads/goodreads_interactions.csv
 
 Contiene:
@@ -542,7 +544,7 @@ Contiene:
 #### 2. goodreads_books.json (descomprimir luego de la descarga)
 ```
 Ubicación en web: Sección "Meta-Data of Books"
-Tamaño: ~2.7 GB
+Tamaño: ~2.7 GB (descargado marca 8.57GB)
 Guardar en: datos_goodreads/goodreads_books.json
 
 Contiene (por cada libro):
@@ -558,7 +560,7 @@ Contiene (por cada libro):
 #### 3. goodreads_reviews_dedup.json (descomprimir luego de la descarga)
 ```
 Ubicación en web: Sección "Book Reviews"
-Tamaño: ~5.5 GB
+Tamaño: ~5.5 GB (descargado marca 15.55GB)
 Guardar en: datos_goodreads/goodreads_reviews_dedup.json
 
 Contiene (por cada review):
@@ -608,7 +610,9 @@ python -c "import pandas; import numpy; import sklearn; print('✓ Todo instalad
 
 ### Ejecución Manual (Paso a Paso)
 
-Para mayor control y entendimiento del proceso:
+No se desarrollo un solo archivo que hiciera todos los pasos debido al peso de los csv y el json usados, al intentar hacer un solo archivo tenia un problema y era que si algo llegaba a fallar despues de estar 1 hora esperando a que cargara los datos, me tocaba repetir el proceso nuevamente desde el principio, por ello mismo decidi hacer los archivos separados por lo que se requiere ejecutarlos en orden
+
+Ademas ayuda con un mayor control y entendimiento del proceso:
 
 ---
 
@@ -1693,7 +1697,7 @@ paginas_totales:        # Total de páginas leídas
 progreso_promedio:      # Progreso medio en libros
   └── Media: 46.8%
 
-tasa_abandono:          # % de libros abandonados ⭐
+tasa_abandono:          # % de libros abandonados 
   └── Media: 0.621 (62.1%)
 ```
 
@@ -1811,18 +1815,36 @@ abandono:               # 0/1
 ```
 CONTENIDO:
 ├── Histograma + Boxplot: duration_minutes
-│   └── Asimetría positiva (cola derecha)
+│   ├── Media: 26.07 minutos (línea roja discontinua)
+│   ├── Mediana: 21.81 minutos (línea verde discontinua)
+│   ├── Pico más alto: ~120,000 sesiones en 15-20 minutos
+│   ├── Cola derecha: Sesiones de hasta 500 minutos (outliers extremos)
+│   └── Boxplot: Caja angosta (5-40 min), muchos outliers arriba
 │
 ├── Histograma + Boxplot: pages_read
-│   └── Asimetría positiva (cola derecha)
+│   ├── Media: 19.32 páginas (línea roja)
+│   ├── Mediana: 17.00 páginas (línea verde)
+│   ├── Pico más alto: ~120,000 sesiones en 10-20 páginas
+│   ├── Cola derecha: Sesiones de hasta 360 páginas (outliers)
+│   └── Boxplot: Caja angosta (10-30 págs), outliers hasta 350
 │
 └── Histograma + Boxplot: completion_pct_end
-    └── Distribución bimodal (picos en ~30% y ~95%)
+    ├── Media: 46.78% (línea roja)
+    ├── Mediana: 45.00% (línea verde)
+    ├── BIMODAL: Dos picos claros
+    │   ├── Pico 1: ~15,000 sesiones en 10-20% (abandonos tempranos)
+    │   └── Pico 2: ~20,000 sesiones en 95-100% (completaron)
+    ├── Valle en 40-60%: Pocas personas abandonan a mitad
+    └── Boxplot: Sin outliers (todo está en rango válido 0-100%)
 
-INSIGHTS:
-├── Mayoría de sesiones: 15-40 minutos
-├── Mayoría lee: 10-30 páginas por sesión
-└── Dos grupos: abandonan temprano (~30%) o casi completan (~95%)
+INSIGHTS CLAVE:
+├── Sesiones cortas dominan: 31% de sesiones duran 15-20 min
+├── Lectura ligera: 31% lee solo 10-20 páginas por sesión
+├── Correlación evidente: Más tiempo = más páginas leídas
+├── Patrón bimodal revela: La gente O abandona temprano O completa
+│   └── Muy pocos abandonan a la mitad (50-70%)
+├── Media > Mediana: Distribuciones sesgadas por outliers
+└── Comportamiento realista: Mayoría lee en sesiones cortas frecuentes
 ```
 
 ### Gráfico 2: Correlaciones
@@ -1832,17 +1854,33 @@ INSIGHTS:
 
 
 ```
-HEATMAP DE CORRELACIONES
+CONTENIDO (Matriz de Correlación 8×8):
 
-Interpretación de colores:
-├── Rojo intenso: Correlación positiva fuerte (r > 0.7)
-├── Azul intenso: Correlación negativa fuerte (r < -0.7)
-└── Blanco: Sin correlación (r ≈ 0)
+CORRELACIONES MUY FUERTES (Rojo intenso, r > 0.8):
+├── progress_start ↔ progress_end: 0.99
+│   └── Obvio: página inicial casi determina página final en sesión
+├── completion_pct_start ↔ completion_pct_end: 0.99
+│   └── % de completitud al inicio/fin de sesión casi idénticos
+├── duration_minutes ↔ pages_read: 0.89
+│   └── Más tiempo de lectura = más páginas leídas
+└── progress_start ↔ completion_pct_start: 0.81
 
-Relaciones destacadas:
-├── duration_minutes ↔ pages_read: 0.89 (rojo)
-├── progress_start ↔ progress_end: 0.99 (rojo intenso)
-└── completion_pct_start ↔ completion_pct_end: 0.99 (rojo intenso)
+CORRELACIONES MODERADAS (Naranja, r = 0.5-0.8):
+├── progress_end ↔ completion_pct_end: 0.77
+└── progress_start ↔ completion_pct_end: 0.79
+
+CORRELACIONES DÉBILES (Gris, r ≈ 0):
+├── user_id con todas las variables: ~0.00 a 0.03
+├── book_id con todas las variables: -0.05 a 0.00
+└── duration_minutes ↔ completion_pct: -0.16 (negativa débil)
+
+INSIGHTS CLAVE:
+├──  IDs no correlacionan: Usuarios/libros diversos sin sesgos
+├──  Progreso altamente correlacionado: Sesiones consecutivas coherentes
+├──  Tiempo-Páginas (0.89): Confirmación de velocidad de lectura realista
+├──  completion_pct es estable: No varía mucho dentro de una sesión
+├──  duration ↔ completion negativa: Sesiones cortas al inicio y final del libro
+└──  Sin multicolinealidad problemática: Variables independientes suficientes
 ```
 
 ### Gráfico 3: Scatter Plots
@@ -1852,19 +1890,48 @@ Relaciones destacadas:
 
 
 ```
-4 SUBPLOTS:
+CONTENIDO (4 subplots):
 
-1. Duración vs Páginas Leídas
-   └── Relación lineal clara (r=0.89)
+1 DURACIÓN VS PÁGINAS LEÍDAS (Superior izquierda):
+├── Tendencia: y = 1.32x + 0.67 (línea roja discontinua)
+├── Patrón: Nube de puntos rosa con correlación lineal clara
+├── Rango X: 0-350 páginas
+├── Rango Y: 0-500 minutos
+├── Concentración: Mayoría en 0-100 páginas, 0-200 minutos
+└── Outliers: Algunos puntos en 200-350 páginas, 300-500 minutos
 
-2. Progreso Inicio vs Progreso Fin
-   └── Línea diagonal perfecta (r=0.99)
+2 PROGRESO INICIAL VS FINAL (Superior derecha):
+├── Tendencia: y = x (línea roja discontinua, diagonal perfecta)
+├── Patrón: Banda diagonal densa (color rosa intenso)
+├── Rango: 0-100% en ambos ejes
+├── Concentración: Sesiones incrementan progreso gradualmente
+└── Sin outliers: Todos los puntos siguen la diagonal
 
-3. Duración por Rangos de Progreso
-   └── Sesiones con más progreso tienden a ser más largas
+3 DURACIÓN POR RANGO DE PROGRESO (Inferior izquierda):
+├── 4 categorías: 0-25%, 25-50%, 50-75%, 75-100%
+├── Boxplots verticales con muchos outliers superiores
+├── Medianas: Todas ~65-70 minutos (línea naranja en caja)
+├── Cajas: Todas similares (50-80 min)
+├── Outliers: Hasta 400-450 minutos en todas las categorías
+└── Patrón: Duración NO varía significativamente por rango de progreso
 
-4. Páginas por Rangos de Duración
-   └── Sesiones más largas → más páginas
+4 PÁGINAS LEÍDAS POR RANGO DE DURACIÓN (Inferior derecha):
+├── 4 categorías: <30min, 30-60min, 60-120min, >120min
+├── Boxplots verticales con outliers superiores
+├── Patrón CLARO: Más duración → más páginas
+│   ├── <30min: Mediana ~20 páginas, caja 10-30
+│   ├── 30-60min: Mediana ~45 páginas, caja 30-70
+│   ├── 60-120min: Mediana ~95 páginas, caja 80-110
+│   └── >120min: Mediana ~170 páginas, caja 150-200
+└── Outliers: Hasta 350+ páginas en categoría >120min
+
+INSIGHTS CLAVE:
+├──  Relación lineal tiempo-páginas: Por cada página, +1.32 minutos
+├──  Progreso consistente: Sesiones avanzan de forma ordenada (no saltos)
+├──  Duración similar por progreso: No importa si estás al 10% o 90%
+│   └── Implica: Velocidad de lectura constante durante el libro
+├──  Sesiones largas leen MÁS: Relación casi lineal entre duración y páginas
+└──  Patrones realistas: Comportamiento natural de lectura
 ```
 
 ### Gráfico 4: Análisis Temporal
@@ -1874,19 +1941,53 @@ Relaciones destacadas:
 
 
 ```
-4 SUBPLOTS:
+4CONTENIDO (4 subplots):
 
-1. Sesiones por Hora del Día
-   └── Picos: 7-9am, 12-2pm, 7-11pm (noche es el mayor)
+1 DISTRIBUCIÓN POR HORA DEL DÍA (Superior izquierda):
+├── Gráfico: Barras azules, 7am-11pm (17 horas)
+├── PICO MÁXIMO: 19h (7pm) con ~50,000 sesiones
+├── PICO SECUNDARIO: 20-21h con ~48,000 sesiones cada una
+├── PICO MAÑANERO: 7-9am con ~28,000 sesiones totales
+├── VALLE: 10-16h con ~9,000-12,000 sesiones por hora
+└── Patrón: U invertida (bajo al mediodía, alto mañana/noche)
 
-2. Sesiones por Día de la Semana
-   └── Relativamente uniforme, ligeramente más en fines de semana
+2️ DISTRIBUCIÓN POR DÍA DE SEMANA (Superior derecha):
+├── Gráfico: Barras naranjas, Lun-Dom (7 días)
+├── Distribución: Casi uniforme (~55,000 sesiones por día)
+├── Ligeramente más alto: Lunes y Martes (~56,000)
+├── Ligeramente más bajo: Domingo (~54,000)
+└── Diferencia máxima: Solo ~2,000 sesiones (4%)
 
-3. Duración Promedio por Hora
-   └── Madrugada: sesiones más largas (menos frecuentes pero intensas)
+3️ DURACIÓN PROMEDIO POR HORA (Inferior izquierda):
+├── Gráfico: Línea verde con puntos, 7am-11pm
+├── Rango Y: 25.7-26.5 minutos (variación de solo 0.8 min)
+├── Pico: 10am con 26.5 minutos promedio
+├── Valle: 14h con 25.7 minutos promedio
+└── Patrón: Casi plano (duración muy estable)
 
-4. Heatmap: Día vs Hora
-   └── Patrón claro: noche (7-11pm) en todos los días
+4️ HEATMAP DÍA × HORA (Inferior derecha):
+├── Eje Y: Lun, Mar, Mié, Jue, Vie, Sáb, Dom
+├── Eje X: 7h-23h
+├── Color: Amarillo (bajo) → Rojo (medio) → Morado (alto)
+├── ZONA MÁS INTENSA (Morado oscuro): 
+│   └── Todos los días, 19-21h (~8,000 sesiones por celda)
+├── ZONA MEDIA (Rojo/Naranja):
+│   └── Todos los días, 7-9h y 22-23h (~3,000-5,000 sesiones)
+├── ZONA BAJA (Amarillo):
+│   └── Todos los días, 10-18h (~1,000-2,000 sesiones)
+└── Patrón: Bandas horizontales (mismo patrón todos los días)
+
+INSIGHTS CLAVE:
+├──  PATRÓN NOCTURNO DOMINANTE: 58% de sesiones entre 7-11pm
+│   └── Razón: Lectura antes de dormir (comportamiento universal)
+├──  Pico matutino menor: 22% entre 7-9am (camino al trabajo/escuela)
+├──  Valle diurno: Solo 20% entre 10am-6pm (horario laboral)
+├──  Sin efecto fin de semana: Distribución uniforme todos los días
+│   └── Implica: La gente lee de noche TODOS los días, no solo fines de semana
+├──  Duración estable: Variación <3% entre horas (25.7-26.5 min)
+│   └── Implica: Duración de sesión NO depende de la hora
+├──  Heatmap revela: Patrón consistente = comportamiento habitual, no esporádico
+└──  Simulación realista: Coincide con estudios de lectura digital
 ```
 
 ### Gráfico 5: Análisis de Abandono
@@ -1895,18 +1996,47 @@ Relaciones destacadas:
 <img width="4165" height="1478" alt="image" src="https://github.com/user-attachments/assets/273a7236-b5b7-4e1e-9b55-8dd13188363f" />
 
 ```
-3 SUBPLOTS:
+CONTENIDO (3 subplots):
 
-1. Distribución del Target
-   ├── Abandonados: 62.1% (barra roja)
-   └── Completados: 37.9% (barra verde)
+1️ DISTRIBUCIÓN DE ABANDONO (Izquierda):
+├── Gráfico: 2 barras verticales
+├── COMPLETADO (Verde): ~31,000 interacciones (37.9%)
+│   └── Altura: ~31,000
+├── ABANDONADO (Rojo): ~19,000 interacciones (62.1%)
+│   └── Altura: ~19,000
+└── Total: ~50,000 interacciones user-book únicas
 
-2. Progreso Promedio por Categoría
-   ├── Abandonados: 38.2% progreso
-   └── Completados: 92.5% progreso
+2️ PROGRESO MÁXIMO POR CATEGORÍA (Centro):
+├── Gráfico: Boxplot agrupado por abandono (0=Completado, 1=Abandonado)
+├── COMPLETADOS (Izquierda):
+│   ├── Mediana: ~100% (línea naranja en tope)
+│   ├── Caja: 90-100% (IQR muy pequeño)
+│   ├── Bigotes: 85-100%
+│   └── Outliers: Algunos en 35-80% (personas que "completaron" pero <90%)
+├── ABANDONADOS (Derecha):
+│   ├── Mediana: ~45% (línea naranja en mitad)
+│   ├── Caja: 20-70% (IQR amplio)
+│   ├── Bigotes: 0-80%
+│   └── Concentración: Mayoría abandona entre 20-70%
+└── Separación clara: Casi sin solapamiento entre grupos
 
-3. Distribución de Progreso Máximo
-   └── Bimodal: pico en ~30% (abandonos) y pico en ~95% (completados)
+3️ BOXPLOT AGRUPADO (Derecha - duplicado del centro):
+├── Mismo contenido que subplot 2
+└── [Parece ser repetición en la visualización]
+
+INSIGHTS CLAVE:
+├──  DESBALANCE DE CLASES: 62% abandonos vs 38% completados
+│   └── Implicación ML: Necesitará balanceo o class_weight en modelos
+├──  Completados coherentes: 100% de progreso (criterio: >90%)
+├──  Abandonados diversos: Rango amplio 0-80%
+│   ├── Algunos abandonan <10% (no les gustó nada)
+│   ├── Mayoría abandona 20-70% (perdieron interés gradualmente)
+│   └── Pocos abandonan >70% (casi terminan pero no completaron)
+├──  Criterio de abandono bien definido:
+│   └── <90% progreso + >21 días inactividad = Abandono
+├──  Outliers en completados: Personas que "completaron" con <90%
+│   └── Posibles lectores que saltaron capítulos o leyeron resumen
+└──  Variable target clara: Separación bien definida entre clases
 ```
 
 ### Gráfico 6: Feature Importance
@@ -1916,21 +2046,51 @@ Relaciones destacadas:
 
 
 ```
-GRÁFICO DE BARRAS HORIZONTAL
+CONTENIDO (Gráfico de Barras Horizontal):
 
-Top 20 features ordenadas por Mutual Information
+TOP 20 FEATURES ORDENADAS POR MUTUAL INFORMATION:
 
-Interpretación:
-├── Barra más larga = mayor importancia
-├── completion_pct_end: 0.677 (la más importante)
-├── tasa_abandono: 0.626
-└── num_sesiones: 0.528
+1. completion_pct_end: 0.6770  (barra más larga)
+2. completion_pct_end_scaled: 0.6758
+3. completion_pct_start: 0.6686
+4. completion_pct_start_scaled: 0.6686
+5. tasa_abandono: 0.6260
+6. progress_end: 0.5757
+7. progreso_promedio: 0.5735
+8. progress_start: 0.5571
+9. ratio_progreso_scaled: 0.5563
+10. ratio_progreso: 0.5562
+11. num_sesiones: 0.5283
+12. num_sesiones_scaled: 0.5263
+13. tasa_abandono_libro: 0.4791
+14. paginas_totales: 0.4654
+15. progreso_promedio_libro: 0.4234
+16. densidad_lectura: 0.3993
+17. paginas_promedio_scaled: 0.3391
+18. paginas_promedio: 0.3386
+19. paginas_promedio_libro: 0.2609
+20. mes: 0.1730
 
-Colores por categoría:
-├── Azul: Features de progreso
-├── Verde: Features de usuario
-├── Naranja: Features de libro
-└── Rojo: Features de interacción
+FEATURES AUSENTES (Importancia muy baja):
+├── Temporales: hora, dia_semana, es_fin_semana
+├── Duración: duration_minutes (solo en forma transformada)
+└── IDs: user_id, book_id (correctamente excluidos)
+
+INSIGHTS CLAVE:
+├──  PROGRESO ES REY: Top 4 son variantes de completion_pct
+│   └── % de completitud es el mejor predictor de abandono (obvio pero crítico)
+├──  HISTORIAL IMPORTA: tasa_abandono (usuario) en posición 5
+│   └── Si el usuario abandona muchos libros, probablemente abandonará este también
+├──  LIBRO TAMBIÉN CUENTA: tasa_abandono_libro en posición 13
+│   └── Si muchos usuarios abandonan este libro, probablemente tú también
+├──  COMPORTAMIENTO > TIEMPO: Features de sesiones/progreso más importantes que hora/día
+│   └── CUÁNTO lees importa más que CUÁNDO lees
+├──  Features escaladas ≈ originales: Normalización no cambió importancia
+│   └── Mutual Information es robusto a escalas
+├──  COLINEALIDAD: completion_pct y completion_pct_scaled son redundantes
+│   └── En modelado final, usar solo una versión
+├──  Top 10 explican mayoría: Enfocarse en estas para feature selection
+└──  Ranking lógico: Features más intuitivamente relacionadas con abandono están arriba
 ```
 
 ### Gráfico 7: Reviews - Distribuciones
@@ -1940,25 +2100,64 @@ Colores por categoría:
 
 
 ```
-6 SUBPLOTS (histogramas con estadísticas):
+CONTENIDO (6 histogramas con estadísticas):
 
-1. abandono_score
-   └── Altamente sesgado a 0 (mayoría de libros tienen bajo abandono)
+1️ ABANDONO_SCORE:
+├── Media: 0.096 (9.6% de reviews mencionan abandono)
+├── Mediana: 0.000 (50% de libros tienen score = 0)
+├── Patrón: Pico MASIVO en 0 (~2M libros)
+├── Cola derecha: Decae rápidamente, algunos hasta score 18
+└── Interpretación: La mayoría de libros NO tienen menciones de abandono
 
-2. engagement_score
-   └── Centrado en 0, ligeramente negativo
+2️ ENGAGEMENT_SCORE:
+├── Media: -0.007 (ligeramente negativo)
+├── Mediana: 0.000
+├── Patrón: Pico en 0 (~2M libros)
+├── Distribución: Casi simétrica, rango -30 a +10
+└── Interpretación: Mayoría de libros son neutrales, pocos extremos
 
-3. complejidad_score
-   └── Centrado en 0, ligeramente negativo (libros tienden a ser simples)
+3️ COMPLEJIDAD_SCORE:
+├── Media: -0.074 (ligeramente simple)
+├── Mediana: 0.000
+├── Patrón: Pico en 0 (~1.8M libros)
+├── Distribución: Casi simétrica, rango -30 a +10
+└── Interpretación: Mayoría neutrales, tendencia hacia "fácil de leer"
 
-4. ritmo_score
-   └── Centrado en 0, ligeramente positivo
+4️ RITMO_SCORE:
+├── Media: 0.069 (ligeramente rápido)
+├── Mediana: 0.000
+├── Patrón: Pico en 0 (~2M libros)
+├── Distribución: Casi simétrica, rango -15 a +20
+└── Interpretación: Mayoría neutrales, leve tendencia a ritmo rápido
 
-5. emocional_score
-   └── Ligeramente positivo
+5️ EMOCIONAL_SCORE:
+├── Media: 0.076 (ligeramente emocional)
+├── Mediana: 0.000
+├── Patrón: Pico en 0 (~2M libros)
+├── Distribución: Casi simétrica, rango -10 a +20
+└── Interpretación: Mayoría neutrales, leve tendencia a conexión emocional
 
-6. sentimiento_promedio
-   └── Positivo en general (media: 0.32)
+6️ SENTIMIENTO_PROMEDIO:
+├── Media: 0.321 (positivo)
+├── Mediana: 0.238
+├── Patrón: Distribución MÁS NORMAL (menos concentrada en 0)
+│   ├── Pico alto: 0-0.5 con ~800,000 libros
+│   └── Pico bajo: 0.75-1.0 con ~400,000 libros
+├── Rango: -1.0 a +1.0
+└── Interpretación: Las reviews tienden a ser positivas, pocas muy negativas
+
+INSIGHTS CLAVE:
+├──  MAYORÍA NEUTRAL: Todos los scores tienen pico masivo en 0
+│   └── Razón: Muchos libros tienen pocas reviews o reviews sin keywords específicas
+├──  SENTIMIENTO DIFERENTE: Único score con distribución más normal
+│   └── Razón: El análisis de sentimiento captura opinión general (más universal)
+├──  SESGO POSITIVO: Media de sentimiento = 0.321 (positivo)
+│   └── Implicación: La gente escribe más reviews de libros que le gustaron
+├──  OUTLIERS EXISTEN: Algunos libros con scores extremos (±18, ±30)
+│   └── Ejemplo: Libros muy controversiales o con muchas reviews
+├──  FEATURES INDEPENDIENTES: Cada score captura aspecto diferente
+│   └── Confirmado por correlaciones bajas en gráfico 8
+└──  EXTRACCIÓN EXITOSA: NLP funcionó, aunque mayoría de libros son neutrales
 ```
 
 ### Gráfico 8: Reviews - Correlaciones
@@ -1968,17 +2167,43 @@ Colores por categoría:
 
 
 ```
-HEATMAP DE CORRELACIONES ENTRE FEATURES DE REVIEWS
+CONTENIDO (Matriz 9×9):
 
-Correlaciones interesantes:
-├── abandono ↔ engagement: -0.049 (negativa débil)
-├── abandono ↔ complejidad: -0.046 (negativa débil)
-├── engagement ↔ sentimiento_positivo: 0.28 (positiva moderada)
-└── complejidad ↔ longitud_palabra: 0.15 (positiva débil)
+CORRELACIONES MUY FUERTES (Rojo intenso, r > 0.8):
+├── sentimiento_promedio ↔ sentimiento_positivo_pct: 0.90
+│   └── Obvio: sentimiento general correlaciona con % de reviews positivas
+└── sentimiento_promedio ↔ sentimiento_positivo_pct: 0.90
 
-INSIGHT: 
-Las correlaciones son generalmente débiles, lo que indica que
-las features de reviews capturan aspectos diferentes e independientes
+CORRELACIONES MODERADAS (Naranja, r = 0.3-0.6):
+└── engagement_score ↔ ritmo_score: 0.40
+    └── Libros de ritmo rápido tienden a ser más engaging
+
+CORRELACIONES DÉBILES (Gris/Beige, r < 0.3):
+├── abandono_score ↔ engagement_score: -0.05
+├── abandono_score ↔ complejidad_score: -0.05
+├── engagement_score ↔ complejidad_score: 0.01
+├── complejidad_score ↔ ritmo_score: -0.09
+├── engagement_score ↔ sentimiento_negativo_pct: -0.13
+└── [Mayoría de combinaciones tienen r < 0.15]
+
+CORRELACIONES NEGATIVAS MODERADAS (Azul):
+├── sentimiento_promedio ↔ sentimiento_negativo_pct: -0.55
+│   └── Obvio: reviews positivas excluyen reviews negativas
+└── sentimiento_positivo_pct ↔ sentimiento_negativo_pct: -0.19
+
+INSIGHTS CLAVE:
+├──  INDEPENDENCIA: Features de reviews son INDEPENDIENTES
+│   └── Implicación ML: NO hay multicolinealidad, cada feature aporta info única
+├──  ABANDONO NO PREDICE DIRECTAMENTE: Correlación con engagement/complejidad ~0
+│   └── Significa: Abandono es multifactorial (no solo por un aspecto)
+├──  RITMO-ENGAGEMENT: Única relación moderada (0.40)
+│   └── Insight: Libros de ritmo rápido son percibidos como más engaging
+├──  SENTIMIENTOS ESPERADOS: Positivo ↔ general (0.90), positivo ↔ negativo (-0.55)
+│   └── Estas son las únicas correlaciones "obvias"
+├──  COMPLEJIDAD INDEPENDIENTE: No correlaciona con nada
+│   └── Insight: Libros complejos pueden ser engaging o aburridos, rápidos o lentos
+├──  VALOR PARA ML: Features decorrelacionadas = mejor poder predictivo
+└──  VALIDACIÓN: Nuestro NLP extrajo aspectos DIFERENTES e INDEPENDIENTES
 ```
 
 ### Gráfico 9: Reviews - Scatter Plots
@@ -1988,19 +2213,57 @@ las features de reviews capturan aspectos diferentes e independientes
 
 
 ```
-4 SUBPLOTS:
+CONTENIDO (4 scatter plots):
 
-1. Abandono vs Engagement (color = complejidad)
-   └── Tendencia: mayor engagement → menor abandono
+1️ ABANDONO VS ENGAGEMENT (Superior izquierda):
+├── Color: complejidad_score (morado = muy complejo, verde = simple)
+├── Ejes: X = engagement (-30 a +10), Y = abandono (0 a +18)
+├── Patrón: Nube concentrada en (0, 0-5)
+├── Tendencia: Ligeramente negativa (más engagement → menos abandono)
+├── Outliers: Algunos libros con abandono alto (15-18) independiente del engagement
+└── Colores: Mayoría morados/verdes (complejidad neutral)
 
-2. Abandono vs Complejidad (color = engagement)
-   └── Sorpresa: complejidad NO predice fuertemente abandono
+2️ ABANDONO VS COMPLEJIDAD (Superior derecha):
+├── Color: engagement_score (morado = bajo, naranja = alto)
+├── Ejes: X = complejidad (-30 a +10), Y = abandono (0 a +18)
+├── Patrón: Nube concentrada en (-10 a +5, 0 a 5)
+├── Tendencia: Sin patrón claro (complejidad NO predice abandono)
+├── Outliers: Algunos con alta complejidad (+10) y bajo abandono
+└── Colores: Mayoría naranjas (engagement neutral/alto)
 
-3. Engagement vs Ritmo
-   └── Ritmo rápido asociado con mayor engagement
+3️ ENGAGEMENT VS RITMO (Inferior izquierda):
+├── Ejes: X = ritmo (-15 a +20), Y = engagement (-30 a +10)
+├── Patrón: Nube con ligera tendencia positiva
+├── Concentración: Mayoría en (-5 a +5, -5 a +5)
+├── Tendencia: Ritmo rápido (>0) asociado con engagement positivo
+├── Cuadrante dominante: Arriba-derecha (ritmo rápido + engagement alto)
+└── Color: Coral uniforme
 
-4. Complejidad vs Sentimiento
-   └── Sin patrón claro
+4️ COMPLEJIDAD VS SENTIMIENTO (Inferior derecha):
+├── Color: Gradient verde-azul (teal)
+├── Ejes: X = complejidad (-30 a +10), Y = sentimiento (-1.0 a +1.0)
+├── Patrón: Nube densa vertical en X=0, Y=0 a +1
+├── Concentración MASIVA: (0, +0.5) con miles de puntos superpuestos
+├── Distribución Y: Mayoría positiva (0.5-1.0), pocos negativos
+├── Tendencia: Sin correlación clara (vertical)
+└── Insight: Complejidad NO afecta sentimiento general
+
+INSIGHTS CLAVE:
+├──  ABANDONO-ENGAGEMENT: Correlación negativa DÉBIL pero visible
+│   └── Más engaging → ligeramente menos abandono (pero no es determinante)
+├──  ABANDONO-COMPLEJIDAD: Sin relación clara
+│   └── Libros complejos NO necesariamente se abandonan más
+├──  ENGAGEMENT-RITMO: Correlación positiva clara
+│   └── Ritmo rápido hace libros más engaging (relación más fuerte)
+├──  COMPLEJIDAD-SENTIMIENTO: Sin relación
+│   └── Libros complejos reciben reviews igual de positivas que simples
+├──  MAYORÍA EN EL CENTRO: Todos los gráficos tienen concentración masiva en (0, 0)
+│   └── Confirma: Mayoría de libros son neutrales en todos los aspectos
+├──  OUTLIERS INTERESANTES:
+│   ├── Libros con abandono 15+ (muy problemáticos)
+│   ├── Engagement -30 (extremadamente aburridos)
+│   └── Complejidad +10 (extremadamente densos)
+└──  PATRONES COHERENTES: Relaciones lógicas (ritmo-engagement) visibles
 ```
 
 ### Gráfico 10: Reviews - Categorización
@@ -2010,22 +2273,44 @@ las features de reviews capturan aspectos diferentes e independientes
 
 
 ```
-3 GRÁFICOS DE BARRAS:
+CONTENIDO (3 gráficos de barras):
 
-1. Libros por Nivel de Abandono
-   ├── Bajo (<5%): 1,719,202 libros (82.7%)
-   ├── Medio (5-15%): 278,347 libros (13.4%)
-   └── Alto (>15%): 82,216 libros (4.0%)
+1️ LIBROS POR NIVEL DE ABANDONO MENCIONADO:
+├── Categorías: Alto, Medio, Bajo
+├── ALTO (>15% reviews mencionan abandono): ~290,000 libros (14%) 🔴
+├── MEDIO (5-15%): ~115,000 libros (5.5%) 🟠
+└── BAJO (<5%): ~1,700,000 libros (82%) 🟢
+    └── La MAYORÍA de libros tienen baja mención de abandono
 
-2. Libros por Nivel de Engagement
-   ├── Bajo (<0): 1,067,234 libros (51.3%)
-   ├── Medio (0-0.5): 967,573 libros (46.5%)
-   └── Alto (>0.5): 44,958 libros (2.2%)
+2️ LIBROS POR NIVEL DE ENGAGEMENT:
+├── Categorías: Bajo, Medio, Alto
+├── BAJO (<0): ~1,800,000 libros (87%) 🔴 MAYORÍA ABSOLUTA
+├── MEDIO (0 a 0.5): ~150,000 libros (7%) 🟠
+└── ALTO (>0.5): ~40,000 libros (2%) 🟢
+    └── Muy pocos libros son extremadamente engaging
 
-3. Libros por Nivel de Complejidad
-   ├── Simple (<-0.1): 1,166,347 libros (56.1%)
-   ├── Medio (-0.1 a 0.3): 806,363 libros (38.8%)
-   └── Complejo (>0.3): 107,055 libros (5.1%)
+3 LIBROS POR NIVEL DE COMPLEJIDAD:
+├── Categorías: Simple, Medio, Complejo
+├── SIMPLE (<-0.1): ~1,500,000 libros (72%) 🟢 MAYORÍA
+├── MEDIO (-0.1 a +0.3): ~300,000 libros (14%) 🟠
+└── COMPLEJO (>0.3): ~260,000 libros (12.5%) 🔴
+    └── Mayoría de libros se perciben como simples o medios
+
+INSIGHTS CLAVE:
+├── 🟢 MAYORÍA SON "NORMALES": 82% bajo abandono, 72% simples
+│   └── Interpretación: La mayoría de libros en Goodreads son accesibles
+├── 🔴 ENGAGEMENT ES RARO: Solo 2% de libros son muy engaging
+│   └── Insight: Ser "adictivo" o "page-turner" es excepcional
+├──  BALANCE COMPLEJIDAD: 72% simples, 14% medios, 13% complejos
+│   └── Refleja: Mercado editorial favorece libros accesibles
+├──  DISTRIBUCIÓN REALISTA: No todos son extremos
+│   ├── Si todos fueran "engaging" → palabra perdería significado
+│   └── Distribución actual es coherente con realidad
+├── OPORTUNIDAD ML: Categorías desbalanceadas
+│   └── Modelos necesitarán manejar clase mayoritaria (bajo/simple)
+├──  LIBROS PROBLEMÁTICOS: 14% con alto abandono mencionado
+│   └── Este 14% (290K libros) son candidatos a NO recomendar
+└──  FEATURES ÚTILES: Segmentan libros de forma significativa
 ```
 
 ### Gráfico 11: Reviews - Top Libros
@@ -2035,19 +2320,130 @@ las features de reviews capturan aspectos diferentes e independientes
 
 
 ```
-4 SUBPLOTS (gráficos de barras horizontales):
+CONTENIDO (4 gráficos de barras horizontales):
 
-1. Top 20 Libros con Más Menciones de Abandono
-   └── Muestra book_id de libros problemáticos
+1️ TOP 20 LIBROS CON MÁS MENCIONES DE ABANDONO (Superior izquierda):
+├── Color: Rojo (indica problema)
+├── Book IDs mostrados en eje Y (números de 6-8 dígitos)
+├── Eje X: Menciones de Abandono (0-70)
+├── LIBRO MÁS PROBLEMÁTICO:
+│   ├── Book ID: 324748
+│   └── ~70 menciones de abandono en reviews
+├── Top 5 libros más abandonados:
+│   ├── #1: 324748 (~70 menciones)
+│   ├── #2: 6618 (~65 menciones)
+│   ├── #3: 6049585 (~60 menciones)
+│   ├── #4: 16125281 (~55 menciones)
+│   └── #5: 28809728 (~53 menciones)
+├── Rango completo: 40-70 menciones
+└── Patrón: Decreciente gradual de arriba hacia abajo
 
-2. Top 20 Libros Más Engaging
-   └── Libros que más menciones positivas reciben
+2️ TOP 20 LIBROS MÁS ENGAGING (Superior derecha):
+├── Color: Verde (indica éxito)
+├── Eje X: Menciones de Engagement (0-60)
+├── LIBRO MÁS ENGAGING:
+│   ├── Book ID: 16177036
+│   └── ~55 menciones de engagement positivo
+├── Top 5 más engaging:
+│   ├── #1: 16177036 (~55 menciones)
+│   ├── #2: 32179079 (~50 menciones)
+│   ├── #3: 28369032 (~48 menciones)
+│   ├── #4: 29542528 (~45 menciones)
+│   └── #5: 26400578 (~42 menciones)
+├── Rango completo: 25-55 menciones
+└── Patrón: Más espaciado que el de abandono
 
-3. Top 20 Libros Más Complejos
-   └── Libros con más menciones de complejidad
+3️ TOP 20 LIBROS MÁS COMPLEJOS (Inferior izquierda):
+├── Color: Naranja (indica dificultad)
+├── Eje X: Menciones de Complejidad (0-60)
+├── LIBRO MÁS COMPLEJO:
+│   ├── Book ID: 36085
+│   └── ~60 menciones de complejidad
+├── Top 5 más complejos:
+│   ├── #1: 36085 (~60 menciones)
+│   ├── #2: 5597902 (~57 menciones)
+│   ├── #3: 26114545 (~55 menciones)
+│   ├── #4: 16158518 (~53 menciones)
+│   └── #5: 13555924 (~52 menciones)
+├── Rango completo: 35-60 menciones
+└── Patrón: Distribución uniforme
 
-4. Top 20 con Ritmo Más Lento
-   └── Libros que más se perciben como lentos
+4️ TOP 20 LIBROS CON RITMO MÁS LENTO (Inferior derecha):
+├── Color: Morado (indica lentitud)
+├── Eje X: Menciones de Ritmo Lento (0-130)
+├── LIBRO MÁS LENTO:
+│   ├── Book ID: 16301141
+│   └── ~130 menciones de ritmo lento  (outlier extremo)
+├── Top 5 con ritmo más lento:
+│   ├── #1: 16301141 (~130 menciones) 
+│   ├── #2: 19508389 (~122 menciones)
+│   ├── #3: 26096 (~115 menciones)
+│   ├── #4: 32075859 (~90 menciones)
+│   └── #5: 13562232 (~85 menciones)
+├── Rango completo: 35-130 menciones
+└── Patrón: Top 2 destacan MUCHO (130, 122) vs resto (40-90)
+
+INSIGHTS CLAVE POR CATEGORÍA:
+
+ ABANDONO (Libros a EVITAR):
+├── 20 libros problemáticos identificados
+├── Book ID 324748 es el MÁS problemático (70 menciones)
+├── Todos tienen 40+ menciones (muy alto)
+├── Uso práctico: Blacklist para sistema de recomendación
+└── Hipótesis: Probablemente libros largos, complejos, o mal escritos
+
+ ENGAGEMENT (Libros a PROMOVER):
+├── 20 libros excepcionales identificados
+├── Book ID 16177036 es el MÁS engaging (55 menciones)
+├── Menos menciones que abandono (25-55 vs 40-70)
+│   └── Razón: La gente escribe menos sobre "adictivo" que sobre "abandoné"
+├── Uso práctico: Whitelist para recomendaciones seguras
+└── Hipótesis: Probablemente thrillers, romance, o ficción ligera
+
+ COMPLEJIDAD (Libros para lectores avanzados):
+├── 20 libros más densos identificados
+├── Book ID 36085 es el MÁS complejo (60 menciones)
+├── Rango similar a engagement (35-60)
+├── Uso práctico: Segmentar por nivel de lector
+│   ├── Novatos: EVITAR estos
+│   └── Expertos: RECOMENDAR estos
+└── Hipótesis: Probablemente filosofía, ciencia, o literatura clásica
+
+ RITMO LENTO (Libros que requieren paciencia):
+├── 20 libros más lentos identificados
+├── Book ID 16301141 DESTACA (130 menciones - outlier extremo)
+├── Rango MÁS AMPLIO: 35-130 (casi 4× diferencia)
+├── Top 2 son OUTLIERS: 130, 122 menciones
+├── Uso práctico: NO recomendar si el usuario prefiere ritmo rápido
+└── Hipótesis: Probablemente épicas históricas, fantasía lenta, o no-ficción densa
+
+COMPARACIÓN ENTRE CATEGORÍAS:
+
+Menciones más altas:
+├── 1º Ritmo lento: 130 menciones (Book 16301141) 🥇
+├── 2º Abandono: 70 menciones (Book 324748)
+├── 3º Complejidad: 60 menciones (Book 36085)
+└── 4º Engagement: 55 menciones (Book 16177036)
+
+Interpretación:
+└── Más fácil identificar problemas (lento/abandono) que virtudes (engaging)
+
+INSIGHTS DE SISTEMA DE RECOMENDACIÓN:
+
+ Estratificación de libros:
+├── RED ZONE (no recomendar): Top 20 abandono + Top 20 ritmo lento
+├── YELLOW ZONE (recomendar con precaución): Top 20 complejidad
+└── GREEN ZONE (recomendar con confianza): Top 20 engagement
+
+ Uso en score de recomendación:
+├── IF book_id IN top_abandono → score × 0.5 (penalizar 50%)
+├── IF book_id IN top_engagement → score × 1.5 (bonificar 50%)
+├── IF book_id IN top_complejo AND user_is_novice → score × 0.7
+└── IF book_id IN top_lento AND user_likes_fast_paced → score × 0.6
+
+ Validación del NLP:
+├──  Identifica libros extremos consistentemente
+├──  Rankings tienen s
 ```
 
 ---
@@ -2095,7 +2491,7 @@ USAMOS DATOS REALES DE GOODREADS:
  is_read (real)
  num_pages (real)
  género (real)
- FEATURES DE REVIEWS (extraídas de 15M reviews reales) ⭐
+ FEATURES DE REVIEWS (extraídas de 15M reviews reales) 
 
 SOLO SIMULAMOS LO QUE NO EXISTE:
  Timestamps de sesiones
@@ -2285,6 +2681,18 @@ HIPÓTESIS:
 
 ---
 
+##  Uso de la IA
+
+Durante el desarrollo del proyecto se utilizaron herramientas de inteligencia artifial como lo son caude y chatgpt para la ayuda el desarrollo de partes del codigo y para la interpretacion y enseñanza de las graficas entregadas, también se usó para una mejor documentación de lo hecho, sin embargo, no se le pidio la solución directa del problema, sino una mejor organización sobre las conclusiones obtenidas durante el proceso 
+
+La mayoria de los comentarios sobre el codigo estan hechos por mi, revisando cada paso realizado y usando una depuración del mismo usando las herramientas de Visual Studio Code
+
+Igual con la documentación, se le pidio a la IA la ayuda de un markdown mas amigable y entendible para todo aquel que quisiera revisarlo
+
+Las formulas y algunas partes del proceso ya habian sido planeadas anteriormente al desarrollo de codigo para este proyecto 
+
+:)
+
 ##  Referencias
 
 ### Datasets
@@ -2319,23 +2727,6 @@ Mobile Media & Communication, 5(2), 123-139
 Nielsen Norman Group (2020).
 "Book reading completion rates in digital platforms"
 UX Research Report
-```
-
-### Machine Learning
-
-```
-Géron, A. (2019).
-"Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow"
-O'Reilly Media, 2nd Edition
-```
-
-### Data Analysis
-
-```
-McKinney, W. (2017).
-"Python for Data Analysis: 
-Data Wrangling with Pandas, NumPy, and IPython"
-O'Reilly Media, 2nd Edition
 ```
 
 ### NLP
