@@ -18,6 +18,8 @@ Repositorio de trabajo para el curso de Fundamentos de Aprendizaje Automatico. C
 |---------|------|-------------|
 | `lecture2/` | Clasificacion con Penguins | Ciclo de vida completo de ML: EDA, PCA, Regresion Logistica y evaluacion sobre el dataset Palmer Penguins. |
 | `lecture3/` | Preprocesamiento Fintech | Limpieza, feature engineering financiero y division temporal train/test sobre un dataset sintetico de metricas fintech. |
+| `lecture4/` | EDA Peliculas | Analisis Exploratorio de Datos completo sobre un dataset de peliculas: limpieza, medidas de tendencia central y dispersion, deteccion/eliminacion de outliers, histogramas, graficos de dispersion y transformaciones de columnas. |
+| `lecture5/` | Regresion Peliculas | Regresion Lineal (Ridge y Lasso con RandomizedSearchCV) para predecir RATING y Regresion Logistica para clasificar peliculas exitosas, con validacion cruzada y metricas de evaluacion. |
 | `Proyecto1/` | Recomendacion de Libros | Pipeline completo para un sistema de recomendacion con prediccion de abandono, integrando analisis NLP de reviews de Goodreads. Ver [README del proyecto](Proyecto1/README.md). |
 
 ---
@@ -55,6 +57,14 @@ python idarraga_isabella_penguins_analysis.py
 # Lecture 3
 cd lecture3
 python lab_fintech_sintetico_2025.py
+
+# Lecture 4
+cd lecture4
+python eda_peliculas.py
+
+# Lecture 5
+cd lecture5
+python regresion_peliculas.py
 
 # Proyecto 1 (ejecutar en orden)
 cd Proyecto1
