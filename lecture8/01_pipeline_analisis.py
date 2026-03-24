@@ -25,7 +25,7 @@ plt.rcParams['font.size'] = 11
 sns.set_theme(style='whitegrid', palette='Set2')
 
 # Ruta al dataset
-DATA_PATH = '../dataset_sintetico_FIRE_UdeA_realista.csv'
+DATA_PATH = 'dataset_sintetico_FIRE_UdeA_realista.csv'
 
 df = pd.read_csv(DATA_PATH)
 print(f'Shape: {df.shape}')
@@ -316,8 +316,8 @@ print(score_df.to_string(index=False))
 vars_finales = score_df[score_df['score_consenso'] >= 2]['variable'].tolist()
 print(f'\n>>> Variables seleccionadas (score >= 2): {vars_finales}')
 
-# Guardar dataset limpio con variables seleccionadas
-cols_guardar = vars_finales + [TARGET]
+# Guardar dataset con TODAS las variables numéricas (no solo las seleccionadas)
+cols_guardar = cols_num + [TARGET]
 df_clean[cols_guardar].to_csv('dataset_para_modelado.csv', index=False)
 print(f'Dataset para modelado guardado: {len(df_clean)} filas x {len(cols_guardar)} columnas')
 print(f'Columnas: {cols_guardar}')

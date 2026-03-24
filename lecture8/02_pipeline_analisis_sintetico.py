@@ -25,7 +25,7 @@ plt.rcParams['figure.figsize'] = (10, 5)
 plt.rcParams['font.size'] = 11
 sns.set_theme(style='whitegrid', palette='Set2')
 
-DATA_PATH = '../dataset_sintetico_FIRE_UdeA.csv'
+DATA_PATH = 'dataset_sintetico_FIRE_UdeA.csv'
 TARGET = 'label'
 
 df = pd.read_csv(DATA_PATH)
@@ -328,8 +328,8 @@ ax.legend(handles=leyenda, loc='lower right', fontsize=9)
 plt.tight_layout()
 plt.show()
 
-# Guardar dataset listo para modelado
-cols_guardar = vars_finales + [TARGET]
+# Guardar dataset con TODAS las variables numéricas (no solo las seleccionadas)
+cols_guardar = cols_num + [TARGET]
 df[cols_guardar].to_csv('dataset_sintetico_para_modelado.csv', index=False)
 print(f'Guardado: {len(df)} filas x {len(cols_guardar)} columnas')
 print(f'Columnas: {cols_guardar}')
